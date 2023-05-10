@@ -16,14 +16,14 @@ public class DagligSkæv : Ordination {
 	public void opretDosis(DateTime tid, double antal) {
         doser.Add(new Dosis(tid, antal));
     }
-
+ 
 	public override double samletDosis() {
 		return base.antalDage() * doegnDosis();
 	}
 
 	public override double doegnDosis() {
-		// TODO: Implement!
-        return -1;
+		
+        return base.antalDage() / samletDosis();
 	}
 
 	public override String getType() {

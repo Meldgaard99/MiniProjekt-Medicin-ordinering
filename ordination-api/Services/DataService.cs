@@ -132,6 +132,11 @@ public class DataService
 
     public PN OpretPN(int patientId, int laegemiddelId, double antal, DateTime startDato, DateTime slutDato) {
         // TODO: Implement!
+        //Find pation 
+        //find lægemidel 
+        //add antal og dato 
+        
+
         return null!;
     }
 
@@ -139,7 +144,6 @@ public class DataService
         double antalMorgen, double antalMiddag, double antalAften, double antalNat, 
         DateTime startDato, DateTime slutDato) {
 
-        // TODO: Implement!
         return null!;
     }
 
