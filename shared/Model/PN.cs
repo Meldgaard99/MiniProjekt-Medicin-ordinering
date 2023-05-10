@@ -61,7 +61,9 @@ public class PN : Ordination
            
         }
 
-        /*      {
+        /* Skal bruges i en eller anden form      
+        
+        { 
                     TimeSpan diff = SlutDen.Date - StartDen.Date;
                     return diff.Days + 1;
                 }*/
