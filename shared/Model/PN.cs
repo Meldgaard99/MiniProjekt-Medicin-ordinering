@@ -21,7 +21,7 @@ public class PN : Ordination
     /// </summary>
     public bool givDosis(Dato givesDen)
     {
-        if (givesDen.dato >= slutDen && givesDen.dato <= startDen)
+        if (givesDen.dato <= slutDen && givesDen.dato >= startDen)
         {
 
             dates.Add(givesDen);
@@ -34,7 +34,8 @@ public class PN : Ordination
     public override double doegnDosis()
     {
         //(antal gange ordinationen er anvendt * antal enheder) / (antal dage mellem første og sidste givning)
-        if (dates.Count > 0)
+        double sum = 0;
+        if (dates.Count() > 0)
         {
 
             DateTime min = dates.First().dato;
@@ -56,10 +57,13 @@ public class PN : Ordination
                 }
                 
             }
+            int dage = (int)(max - min).TotalDays + 1;
+            sum = samletDosis() / dage; 
             
-
-           
+        
         }
+            return sum;
+
 
         /* Skal bruges i en eller anden form      
         
