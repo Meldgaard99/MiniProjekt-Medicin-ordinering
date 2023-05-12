@@ -22,7 +22,7 @@ public abstract class Ordination {
     /// </summary>
     public int antalDage() {
 
-        return;
+        return 2 ;
     }
 
     public override String ToString() {
