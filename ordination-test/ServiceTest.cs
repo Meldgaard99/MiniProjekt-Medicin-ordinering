@@ -49,9 +49,9 @@ public class ServiceTest
         DagligFast Test1 = new DagligFast( new DateTime(2023, 01, 01), new DateTime(2023, 01, 07), new Laegemiddel("Methotrexat", 0.1, 0.15, 0.16, "Styk"), 2, 2, 1, 0);
 
 
-        double doegnDosisTestTestCase1 = Test1.doegnDosis();
+         double doegnDosisTestCase1 = Test1.doegnDosis();
 
-        Assert.AreEqual(5, Test1.doegnDosis());
+        Assert.AreEqual(5, doegnDosisTestCase1);
 
         
 
@@ -62,13 +62,19 @@ public class ServiceTest
     {
 
         Patient patient = new Patient("121258-0514", "Henrik Hansen", 63.4);
+        
         Laegemiddel lm = service.GetLaegemidler().First();
 
-        DagligFast Test1 = new DagligFast(new DateTime(2023, 01, 01), new DateTime(2023, 01, 07), new Laegemiddel("Methotrexat", 0.1, 0.15, 0.16, "Styk"), 2, 2, 1, 0);
+        DagligFast Test1 = new DagligFast(new DateTime(2023, 01, 01), new DateTime(2023, 01, 07), new Laegemiddel("Methotrexat", 0.1, 0.15, 0.16, "Styk"), 4, 2, 1, 0);
+
+        double DagligFastTestCase1 = Test1.doegnDosis();
 
 
-
+        Assert.AreEqual("Henrik Hansen", patient.navn);
+        Assert.AreEqual(7, DagligFastTestCase1);
+        Assert.AreEqual(6, (Test1.slutDen.Day- Test1.startDen.Day));
     }
+
 
 /*
     [TestMethod]
