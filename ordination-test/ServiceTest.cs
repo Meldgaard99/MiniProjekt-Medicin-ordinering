@@ -58,7 +58,17 @@ public class ServiceTest
     }
 
     [TestMethod]
-    public void  
+    public void dagligFastTest1()
+    {
+
+        Patient patient = new Patient("121258-0514", "Henrik Hansen", 63.4);
+        Laegemiddel lm = service.GetLaegemidler().First();
+
+        DagligFast Test1 = new DagligFast(new DateTime(2023, 01, 01), new DateTime(2023, 01, 07), new Laegemiddel("Methotrexat", 0.1, 0.15, 0.16, "Styk"), 2, 2, 1, 0);
+
+
+
+    }
 
 /*
     [TestMethod]
