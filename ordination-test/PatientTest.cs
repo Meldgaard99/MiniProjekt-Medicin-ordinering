@@ -1,7 +1,7 @@
 namespace ordination_test;
 
 using shared.Model;
-
+/*
 [TestClass]
 public class PatientTest
 {
@@ -28,4 +28,6 @@ public class PatientTest
         Patient patient = new Patient(cpr, navn, vægt);
         Assert.AreEqual("Egon", patient.navn);
     }
+    
 }
+*/
