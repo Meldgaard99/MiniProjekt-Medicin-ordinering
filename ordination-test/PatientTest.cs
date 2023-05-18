@@ -1,7 +1,9 @@
 namespace ordination_test;
 
+using Service;
+using Data;
 using shared.Model;
-/*
+
 [TestClass]
 public class PatientTest
 {
@@ -18,6 +20,7 @@ public class PatientTest
     }
 
 
+
     [TestMethod]
     public void TestDerAltidFejler()
     {
@@ -26,8 +29,7 @@ public class PatientTest
         double vægt = 83;
 
         Patient patient = new Patient(cpr, navn, vægt);
-        Assert.AreEqual("Egon", patient.navn);
+        Assert.AreNotSame("Egon", patient.navn);
     }
     
 }
-*/

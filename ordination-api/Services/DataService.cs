@@ -138,61 +138,109 @@ public class DataService
         return db.Laegemiddler.ToList();
     }
 
-        public PN OpretPN(int patientId, int laegemiddelId, double antal, DateTime startDato, DateTime slutDato) 
+    public DagligSkæv OpretDagligSkaev(int patientId, int laegemiddelId, Dosis[] doser, DateTime startDato, DateTime slutDato)
+    {
+        if (slutDato > startDato)
         {
-      
-        Patient patient = db.Patienter.FirstOrDefault(a => a.PatientId == patientId)!;
-        Laegemiddel laegemiddel = db.Laegemiddler.FirstOrDefault(a => a.LaegemiddelId == laegemiddelId)!;
-        PN Pn = new PN(startDato, slutDato, antal, laegemiddel);
-         db.PNs.Add(Pn);
-         patient.ordinationer.Add(Pn);
+
+            foreach (Dosis dosis in doser)
+            {
+                if (dosis.antal < 0)
+                {
+                    throw new Exception("Antallet af doser skal være af positiv værdi");
+                }
+            }
+
+            DagligSkæv skæv = new DagligSkæv();
+            Patient patient = db.Patienter.FirstOrDefault(a => a.PatientId == patientId);
+            Laegemiddel laegemiddel = db.Laegemiddler.FirstOrDefault(a => a.LaegemiddelId == laegemiddelId);
+            skæv = new DagligSkæv(startDato, slutDato, laegemiddel, doser);
+            db.DagligSkæve.Add(skæv);
+            patient.ordinationer.Add(skæv);
 
             db.SaveChanges();
-
             return null!;
+
         }
+        else
+        {
+            throw new Exception("Slutdatoen skal være større end startdatoen");
 
-    public DagligFast OpretDagligFast(int patientId, int laegemiddelId,
-        double antalMorgen, double antalMiddag, double antalAften, double antalNat,
-        DateTime startDato, DateTime slutDato)
-    {
-        Patient patient = db.Patienter.Find(patientId)!;
-
-
-
-        Laegemiddel laegemiddel = db.Laegemiddler.Find(laegemiddelId)!;
-
-        
-
-         DagligFast dagligFast = new DagligFast(startDato, slutDato, laegemiddel, antalMorgen, antalMiddag, antalAften, antalNat);
-        db.Ordinationer.Add(dagligFast);
-        db.SaveChanges();
-
-        int ID = dagligFast.OrdinationId;
-        Ordination ordination = db.Ordinationer.Find(ID)!;
-        patient.ordinationer.Add(ordination);
-        db.SaveChanges();
-
-
-        return dagligFast!;
+        }
     }
 
-public DagligSkæv OpretDagligSkaev(int patientId, int laegemiddelId, Dosis[] doser, DateTime startDato, DateTime slutDato) {
-     
-        DagligSkæv skæv = new DagligSkæv();
-        Patient patient = db.Patienter.FirstOrDefault(a => a.PatientId == patientId);
-        Laegemiddel laegemiddel = db.Laegemiddler.FirstOrDefault(a => a.LaegemiddelId == laegemiddelId);
-        skæv = new DagligSkæv(startDato, slutDato, laegemiddel, doser);
-        db.DagligSkæve.Add(skæv);
-        patient.ordinationer.Add(skæv);
 
-        db.SaveChanges();
-        return null!;
+
+
+    public DagligFast OpretDagligFast(int patientId, int laegemiddelId,
+            double antalMorgen, double antalMiddag, double antalAften, double antalNat, DateTime startDato, DateTime slutDato)
+    {
+        if (slutDato > startDato)
+        {
+            if (antalMorgen >= 0 && antalMiddag >= 0 && antalAften >= 0 && antalNat >= 0)
+            {
+                Patient patient = db.Patienter.Find(patientId)!;
+
+                Laegemiddel laegemiddel = db.Laegemiddler.Find(laegemiddelId)!;
+
+                DagligFast dagligFast = new DagligFast(startDato, slutDato, laegemiddel, antalMorgen, antalMiddag, antalAften, antalNat);
+                db.Ordinationer.Add(dagligFast);
+                db.SaveChanges();
+
+                int ID = dagligFast.OrdinationId;
+                Ordination ordination = db.Ordinationer.Find(ID)!;
+                patient.ordinationer.Add(ordination);
+                db.SaveChanges();
+
+                return dagligFast!;
+
+            }
+            else
+            {
+                throw new Exception("Antallet af morgen, middag, aften og nat skal være positive værdier");
+            }
+
+        }
+        else
+        {
+            throw new Exception("Slutdatoen skal være større end startdatoen");
+
+        }
+    }
+
+
+    public PN OpretPN(int patientId, int laegemiddelId, double antal, DateTime startDato, DateTime slutDato)
+    {
+
+        if (slutDato > startDato)
+        {
+            if (antal >= 0)
+            {
+                Patient patient = db.Patienter.FirstOrDefault(a => a.PatientId == patientId)!;
+                Laegemiddel laegemiddel = db.Laegemiddler.FirstOrDefault(a => a.LaegemiddelId == laegemiddelId)!;
+                PN Pn = new PN(startDato, slutDato, antal, laegemiddel);
+                db.PNs.Add(Pn);
+                patient.ordinationer.Add(Pn);
+
+                db.SaveChanges();
+
+                return null!;
+            }
+            else
+            {
+                throw new Exception("Antal doser skal være af positiv værdi");
+            }
+        }
+        else
+        {
+            throw new Exception("Slutdatoen skal være større end startdatoen");
+        }
+
     }
 
     public string AnvendOrdination(int id, Dato dato)
     {
-    //går ind og finder id på ordinationen
+        //går ind og finder id på ordinationen
         PN pn = db.PNs.Find(id)!;
         bool DosisGivet = pn.givDosis(dato);
         if (DosisGivet)
@@ -220,26 +268,26 @@ public DagligSkæv OpretDagligSkaev(int patientId, int laegemiddelId, Dosis[] do
     {
         Patient patient = db.Patienter.Find(patientId)!;
         Laegemiddel laegemiddel = db.Laegemiddler.Find(laegemiddelId)!;
-        
+
         //Med til at indikere hvis den ikke kan finde patienten eller lægemidlet eller bliver opfyldt
         double anbefaletDosis = -1;
 
         if (patient != null && laegemiddel != null && patient.vaegt < 40)
         {
-                anbefaletDosis = patient.vaegt * laegemiddel.enhedPrKgPrDoegnLet;     
-                   }
+            anbefaletDosis = patient.vaegt * laegemiddel.enhedPrKgPrDoegnLet;
+        }
         else if (patient != null && laegemiddel != null && patient.vaegt > 110)
         {
             anbefaletDosis = patient.vaegt * laegemiddel.enhedPrKgPrDoegnTung;
         }
-        else if (patient != null && laegemiddel != null && patient.vaegt >= 40 && patient.vaegt <=110 )
+        else if (patient != null && laegemiddel != null && patient.vaegt >= 40 && patient.vaegt <= 110)
         {
             anbefaletDosis = patient.vaegt * laegemiddel.enhedPrKgPrDoegnNormal;
-           
+
         }
-        
-      return anbefaletDosis;
-        
+
+        return anbefaletDosis;
+
     }
 
 }
