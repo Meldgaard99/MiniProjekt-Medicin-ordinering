@@ -279,7 +279,7 @@ public class DataService
 
         if (patient.vaegt <= 0)
         {
-            throw new Exception("Patientens vægt skal være en positiv værdi");
+            throw new NullReferenceException("Patientens vægt skal være en positiv værdi");
         }
 
         else if (patient != null && laegemiddel != null && patient.vaegt > 0 )
