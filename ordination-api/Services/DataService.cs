@@ -277,24 +277,17 @@ public class DataService
         //Med til at indikere hvis den ikke kan finde patienten eller lægemidlet eller bliver opfyldt
         double anbefaletDosis = -1;
 
-        if (patient.vaegt <= 3)
+        if (patient.vaegt <= 0)
         {
             throw new Exception("Patientens vægt skal være en positiv værdi");
         }
 
-        else if (patient != null && laegemiddel != null && patient.vaegt < 40)
+        else if (patient != null && laegemiddel != null && patient.vaegt > 0 )
         {
-            anbefaletDosis = patient.vaegt * laegemiddel.enhedPrKgPrDoegnLet;
+            anbefaletDosis = patient!.vaegt * laegemiddel!.enhedPrKgPrDoegnLet;
         }
-        else if (patient != null && laegemiddel != null && patient.vaegt > 110)
-        {
-            anbefaletDosis = patient.vaegt * laegemiddel.enhedPrKgPrDoegnTung;
-        }
-        else if (patient != null && laegemiddel != null && patient.vaegt >= 40 && patient.vaegt <= 110)
-        {
-            anbefaletDosis = patient.vaegt * laegemiddel.enhedPrKgPrDoegnNormal;
-
-        }
+       
+        
 
         return anbefaletDosis;
 
