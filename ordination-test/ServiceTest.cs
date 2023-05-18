@@ -70,7 +70,7 @@ public class ServiceTest
 
         double DagligFastTestCase2 = samletDosisTest2.samletDosis();
 
-         Assert.AreEqual(100, DagligFastTestCase2);
+        Assert.AreEqual(100, DagligFastTestCase2);
 
     }
 
@@ -100,7 +100,7 @@ public class ServiceTest
 
         double samletDosisTestCase4 = samletDosisTest4.samletDosis();
 
-         Assert.AreEqual(-100, samletDosisTestCase4);
+        Assert.AreEqual(-100, samletDosisTestCase4);
 
     }
 
@@ -125,7 +125,7 @@ public class ServiceTest
 
         DagligFast doegnDosisTest2 = new DagligFast(new DateTime(2023, 05, 20), new DateTime(2023, 09, 12), new Laegemiddel("Pencilin", 0.1, 0.15, 0.16, "Styk"), 10, 2, 1, 0);
 
-    
+
         double doegnDosisTestCase2 = doegnDosisTest2.doegnDosis();
 
 
@@ -133,7 +133,7 @@ public class ServiceTest
     }
 
 
-     [TestMethod]
+    [TestMethod]
     public void doegnDosisTesterFejl()
     {
 
@@ -152,7 +152,7 @@ public class ServiceTest
 
         DagligFast doegnDosisTest2 = new DagligFast(new DateTime(2023, 05, 20), new DateTime(2023, 09, 12), new Laegemiddel("Pencilin", 0.1, 0.15, 0.16, "Styk"), -10, -2, -1, 0);
 
-    
+
         double doegnDosisTestCase2 = doegnDosisTest2.doegnDosis();
 
 
@@ -165,7 +165,7 @@ public class ServiceTest
     {
         //Tester gyldig data
         //Tester metoden antalDage i klassen DagligFast
-        //Testen er lavet med 3 forskellige scenarier, hvor der testes for 3, 10 og 30 dage
+        //Testen er lavet med 3 forskellige scenarier, hvor der testes for 4, 10 og 30 dage
         //Det er gyldig værdier
 
         DagligFast antalDagekort = new DagligFast(new DateTime(2023, 01, 01), new DateTime(2023, 01, 04), new Laegemiddel("Pencilin", 0.1, 0.15, 0.16, "Styk"), 4, 2, 1, 0);
@@ -190,9 +190,9 @@ public class ServiceTest
 
     }
 
-     [TestMethod]
+    [TestMethod]
     public void AntalDageTestFejl()
-    { 
+    {
         //Tester ugyldig datoer, hvor startdaten er højere end slutdatoen 
         //Testen er lavet med 2 forskellige scenarier, hvor der testes for 1 og 10 dage
         //Det er ugyldig værdier
@@ -213,7 +213,7 @@ public class ServiceTest
     }
 
 
-     [TestMethod]
+    [TestMethod]
     public void GivDosisTest()
     {
         //Tester gyldig data
@@ -227,7 +227,7 @@ public class ServiceTest
     }
 
 
-      [TestMethod]
+    [TestMethod]
     public void GivDosisTestFejl()
     {
         //Tester ugyldig data
@@ -240,39 +240,51 @@ public class ServiceTest
 
     }
 
-/*
-//Virker ikke endnu :(, arbejder stærkt på sagen
 [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public void TestAtKodenSmiderEnException()
-    {
-        // Herunder skal man så kalde noget kode,
-        // der smider en exception.
-
-        // Hvis koden ikke smider en exception,
-        // så fejler testen.
-        //Kald noget kode der smider en expetion, eventuelt lav en new med negative værdier
-        Console.WriteLine("Her kommer der ikke en exception. Testen fejler.");
-    }
-    */
-
-/*
+public void OpretDagligSkaev()
+{
+    // Hent en patient og et lægemiddel
+    Patient patient = service.GetPatienter().First();
+    Laegemiddel laegemiddel = service.GetLaegemidler().First();
 
 
-[TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
+    // Opret en daglig skæv
+    service.OpretDagligSkaev(patient.PatientId, laegemiddel.LaegemiddelId,
+        new Dosis[] { new Dosis(DateTime.Now, 2), new Dosis(DateTime.Now.AddHours(6), 2) },
+        DateTime.Now, DateTime.Now.AddDays(3));
+
+        //tjekker man om der er oprettet 2 til listen
+        Assert.AreEqual(2, service.GetDagligSkæve().Count());
+    
+
+
+         service.OpretDagligSkaev(patient.PatientId, laegemiddel.LaegemiddelId,
+            new Dosis[] {
+                new Dosis(Util.CreateTimeOnly(12, 0, 0), 0.5),
+                new Dosis(Util.CreateTimeOnly(12, 40, 0), 1),
+                new Dosis(Util.CreateTimeOnly(16, 0, 0), 2.5),
+                new Dosis(Util.CreateTimeOnly(18, 45, 0), 3)
+
+            }, new DateTime(2023, 01, 01), new DateTime(2023, 02, 01));
+
+        // tjekker man om der er oprettet 3 til listen
+        Assert.AreEqual(3, service.GetDagligSkæve().Count());
+
+
+}
+
+
+    [TestMethod]
+    [ExpectedException(typeof(NullReferenceException))]
     public void TestAtKodenSmiderEnExceptions()
-    { 
-    
+    {
 
-        if ( Assert.AreEqual(-1, antalDageTestCase4)
-        {
-            throw new ArgumentNullException("some Method received a null argument!");
-        }
-        //throw new ArgumentNullException("some Method received a null argument!");
+        Laegemiddel lm = new Laegemiddel("Fucidin", 0.025, 0.025, 0.025, "Styk");
+        Patient patient1 =  new Patient("123456-1255", "jens Hansen", -1.5);
         
+        service.GetAnbefaletDosisPerDøgn(patient1.PatientId, lm.LaegemiddelId);
+
     }
-    
-*/
+
 
 }

@@ -23,7 +23,7 @@ public class DataService
     {
 
         // Patients
-        Patient[] patients = new Patient[5];
+        Patient[] patients = new Patient[6];
         patients[0] = db.Patienter.FirstOrDefault()!;
 
         if (patients[0] == null)
@@ -33,12 +33,16 @@ public class DataService
             patients[2] = new Patient("050972-1233", "Hans Jørgensen", 89.4);
             patients[3] = new Patient("011064-1522", "Ulla Nielsen", 59.9);
             patients[4] = new Patient("123456-1234", "Ib Hansen", 87.7);
+            patients[5] = new Patient("123456-1255", "Christian Hansen", -1.5);
+
 
             db.Patienter.Add(patients[0]);
             db.Patienter.Add(patients[1]);
             db.Patienter.Add(patients[2]);
             db.Patienter.Add(patients[3]);
             db.Patienter.Add(patients[4]);
+            db.Patienter.Add(patients[5]);
+
             db.SaveChanges();
         }
 
@@ -80,6 +84,7 @@ public class DataService
                 new Dosis(CreateTimeOnly(12, 40, 0), 1),
                 new Dosis(CreateTimeOnly(16, 0, 0), 2.5),
                 new Dosis(CreateTimeOnly(18, 45, 0), 3)
+
             }.ToList();
 
 
@@ -152,7 +157,7 @@ public class DataService
             }
 
             DagligSkæv skæv = new DagligSkæv();
-            Patient patient = db.Patienter.FirstOrDefault(a => a.PatientId == patientId);
+            Patient patient = db.Patienter.FirstOrDefault(a => a.PatientId == patientId)!;
             Laegemiddel laegemiddel = db.Laegemiddler.FirstOrDefault(a => a.LaegemiddelId == laegemiddelId);
             skæv = new DagligSkæv(startDato, slutDato, laegemiddel, doser);
             db.DagligSkæve.Add(skæv);
@@ -272,7 +277,12 @@ public class DataService
         //Med til at indikere hvis den ikke kan finde patienten eller lægemidlet eller bliver opfyldt
         double anbefaletDosis = -1;
 
-        if (patient != null && laegemiddel != null && patient.vaegt < 40)
+        if (patient.vaegt <= 3)
+        {
+            throw new Exception("Patientens vægt skal være en positiv værdi");
+        }
+
+        else if (patient != null && laegemiddel != null && patient.vaegt < 40)
         {
             anbefaletDosis = patient.vaegt * laegemiddel.enhedPrKgPrDoegnLet;
         }
